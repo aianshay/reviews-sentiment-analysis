@@ -1,0 +1,1 @@
+Quando estou com um jogo aberto e vou sair ele trava, tenho que reiniciar ele para volto a funcionar.

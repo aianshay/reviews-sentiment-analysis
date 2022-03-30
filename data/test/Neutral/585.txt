@@ -1,0 +1,1 @@
+A bateria acaba muito rápido, e a tela quando está em um jogo fica falhando, piscando e muda de cor.

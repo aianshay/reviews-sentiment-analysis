@@ -1,0 +1,1 @@
+O aparelho nas primeiras semanas de uso apresentou um erro " ocorreu um erro com com.google.android.ims. Fechar esse app agora?" erro constante e trava o telefone toda vez que acontece e ainda não consegui resolver

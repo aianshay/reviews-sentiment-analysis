@@ -1,0 +1,1 @@
+Faltou só o adaptador pro carregador que veio com entrada diferente do padrão Brasil.

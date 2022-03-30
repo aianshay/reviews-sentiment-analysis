@@ -1,0 +1,1 @@
+As vezes a tela começa a piscar e alternar entre várias telas, e demora um pouco a parar, parece um bug. Mas depois volta ao normal.

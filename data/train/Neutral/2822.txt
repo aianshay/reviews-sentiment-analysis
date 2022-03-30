@@ -1,0 +1,1 @@
+Fui verificar se o aparelho era original e ao digitar todos os EMEI a página retornou que o EMEI informado não está na base de dados da fabricante (Your IMEI or S/N doesn't exist, please verify and enter again). FRUSTRANTE!!!!
