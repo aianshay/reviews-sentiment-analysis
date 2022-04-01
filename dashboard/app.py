@@ -25,26 +25,24 @@ page = st.sidebar.selectbox("Navigation", ["Main", "Models Results", "Word Cloud
 
 
 if page == "Main":
-    st.title('Sentiment analysis of Smartphone Reviews')
+    st.title('Sentiment Analysis of Smartphone Reviews')
 
     select = st.sidebar.selectbox('Visualization type', ['Line Chart','Pie Chart'], key=1)
 
     monthly_count = pd.read_csv('../data/monthly_count.csv')
 
-    fig = sns.lineplot()
+    line_plot = px.line(data_frame=monthly_count, 
+                        x='new_date', 
+                        y='monthly_perc', 
+                        color='label',
+                        markers=True,
+                        labels={'new_date' : 'Month',
+                                'monthly_perc' : 'Percentage of Reviews (%)'},
+                        color_discrete_sequence=['blue', 'green', 'red'],
+                        title='Monthly Sentiment Share',
+                        )
 
-    #line_plot = px.line(data_frame=monthly_count, 
-     #             x='new_date', 
-      #            y='monthly_perc', 
-       #           color='label',
-        #          title='Montlhy Sentiment Share')
-
-    #st.plotly_chart(line_plot) 
-
-    fig = plt.figure(figsize=(10, 4))
-    sns.lineplot(data=monthly_count, x='new_date', y='monthly_perc', hue='label')
-    plt.xticks(rotation=90)
-    st.pyplot(fig)
+    st.plotly_chart(line_plot) 
 
 elif page == 'Word Clouds':
     months = st.sidebar.slider('Months to plot', 1, 12, (1, 12))
