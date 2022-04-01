@@ -2,6 +2,8 @@ from pyparsing import col
 import streamlit as st
 import pandas as pd
 import numpy as np
+import spacy
+from wordcloud import WordCloud
 import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
@@ -45,8 +47,29 @@ if page == "Main":
     st.plotly_chart(line_plot) 
 
 elif page == 'Word Clouds':
-    months = st.sidebar.slider('Months to plot', 1, 12, (1, 12))
-    years = st.sidebar.slider('Year to plot', 2020, 2021)
+    st.title('Sentiment analysis of Smartphone Reviews')
+    
+    select = st.sidebar.selectbox('Evaluation', ['Good','Bad'], key=1)
+
+    monthly_count = pd.read_csv('../data/monthly_count.csv')
+    
+    # Create stopword set
+    nlp = spacy.load('pt_core_news_sm')
+    stopwords = set(nlp.Defaults.stop_words)
+    stopwords.update(['celular', 'aparelho', 'produto', 'dia', 'xiaomi', 'veio', 'telefone'])
+    
+    if(select == 'Good'):
+        text_good = " ".join(str(review) for review in data[data['label'] == 'Good']['review'])
+        wc = WordCloud(stopwords=stopwords, background_color="white").generate(text_good)
+
+    else:
+        text_bad = " ".join(str(review) for review in data[data['label'] == 'Bad']['review'])
+        wc = WordCloud(stopwords=stopwords, background_color="white").generate(text_bad)
+    
+    fig, ax = plt.subplots(figsize = (12, 8))
+    ax.imshow(wc, interpolation = 'bilinear')
+    plt.axis('off')
+    st.pyplot(fig)
 
 
 elif page == "Models Results":
