@@ -47,11 +47,9 @@ if page == "Main":
     st.plotly_chart(line_plot) 
 
 elif page == 'Word Clouds':
-    st.title('Sentiment analysis of Smartphone Reviews')
+    st.title('Word Clouds')
     
     select = st.sidebar.selectbox('Evaluation', ['Good','Bad'], key=1)
-
-    monthly_count = pd.read_csv('../data/monthly_count.csv')
     
     # Create stopword set
     nlp = spacy.load('pt_core_news_sm')
@@ -73,4 +71,14 @@ elif page == 'Word Clouds':
 
 
 elif page == "Models Results":
-    st.title("Models Results")
+    select = st.sidebar.selectbox('Models', ['Lstm', 'Random Forest'], key=1)
+    
+    if(select == 'Lstm'):
+        st.title("Lstm")
+        df_lstm = pd.read_csv('../results/lstm.csv')
+        st.dataframe(df_lstm.iloc[:,1:]) 
+
+    else:
+        st.title("Random Forest")
+        df_rf = pd.read_csv('../results/random_forest.csv')
+        st.dataframe(df_rf.iloc[:,1:])
