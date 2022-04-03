@@ -77,6 +77,36 @@ elif page == "Models Results":
         st.title("Lstm")
         df_lstm = pd.read_csv('../results/lstm.csv')
         st.dataframe(df_lstm.iloc[:,1:]) 
+        
+        count_pred = pd.read_csv('../data/pred_lstm_count.csv')
+
+        line_plot = px.line(data_frame=count_pred, 
+                            x='new_date', 
+                            y='monthly_perc', 
+                            color='label_pred',
+                            markers=True,
+                            labels={'new_date' : 'Month',
+                                    'monthly_perc' : 'Percentage of Reviews (%)'},
+                            color_discrete_sequence=['blue', 'green', 'red'],
+                            title='Label Prediction',
+                            )
+
+        st.plotly_chart(line_plot)
+        
+        count_label = pd.read_csv('../data/label_test_count.csv')
+
+        line_plot = px.line(data_frame=count_label, 
+                            x='new_date', 
+                            y='monthly_perc', 
+                            color='label',
+                            markers=True,
+                            labels={'new_date' : 'Month',
+                                    'monthly_perc' : 'Percentage of Reviews (%)'},
+                            color_discrete_sequence=['blue', 'green', 'red'],
+                            title='Real Label',
+                            )
+
+        st.plotly_chart(line_plot)
 
     else:
         st.title("Random Forest")
