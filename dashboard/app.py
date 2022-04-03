@@ -47,11 +47,9 @@ if page == "Main":
     st.plotly_chart(line_plot) 
 
 elif page == 'Word Clouds':
-    st.title('Sentiment analysis of Smartphone Reviews')
+    st.title('Word Clouds')
     
     select = st.sidebar.selectbox('Evaluation', ['Good','Bad'], key=1)
-
-    monthly_count = pd.read_csv('../data/monthly_count.csv')
     
     # Create stopword set
     nlp = spacy.load('pt_core_news_sm')
@@ -73,4 +71,44 @@ elif page == 'Word Clouds':
 
 
 elif page == "Models Results":
-    st.title("Models Results")
+    select = st.sidebar.selectbox('Models', ['Lstm', 'Random Forest'], key=1)
+    
+    if(select == 'Lstm'):
+        st.title("Lstm")
+        df_lstm = pd.read_csv('../results/lstm.csv')
+        st.dataframe(df_lstm.iloc[:,1:]) 
+        
+        count_pred = pd.read_csv('../data/pred_lstm_count.csv')
+
+        line_plot = px.line(data_frame=count_pred, 
+                            x='new_date', 
+                            y='monthly_perc', 
+                            color='label_pred',
+                            markers=True,
+                            labels={'new_date' : 'Month',
+                                    'monthly_perc' : 'Percentage of Reviews (%)'},
+                            color_discrete_sequence=['blue', 'green', 'red'],
+                            title='Label Prediction',
+                            )
+
+        st.plotly_chart(line_plot)
+        
+        count_label = pd.read_csv('../data/label_test_count.csv')
+
+        line_plot = px.line(data_frame=count_label, 
+                            x='new_date', 
+                            y='monthly_perc', 
+                            color='label',
+                            markers=True,
+                            labels={'new_date' : 'Month',
+                                    'monthly_perc' : 'Percentage of Reviews (%)'},
+                            color_discrete_sequence=['blue', 'green', 'red'],
+                            title='Real Label',
+                            )
+
+        st.plotly_chart(line_plot)
+
+    else:
+        st.title("Random Forest")
+        df_rf = pd.read_csv('../results/random_forest.csv')
+        st.dataframe(df_rf.iloc[:,1:])
