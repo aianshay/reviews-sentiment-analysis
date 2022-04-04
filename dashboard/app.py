@@ -1,3 +1,4 @@
+from locale import normalize
 from pyparsing import col
 import streamlit as st
 import pandas as pd
@@ -10,33 +11,27 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 
 
-def load_data():
-
-    data = pd.read_csv('../data/reviews_final.csv')
-
-    return data
-
-data = load_data()
 st.cache(persist = True)    
 st.set_page_config(page_title='Sentiment Analysis Dashboard')
 
+data = pd.read_csv('../data/reviews_final.csv')
 
 st.sidebar.title('Sentiment Analysis of Smartphone Reviews')
 st.sidebar.subheader('by Aian Shay and Tassiane Lima')
 
 page = st.sidebar.selectbox("Navigation", ["Main", "Models Results", "Word Clouds"]) 
 
-
 if page == "Main":
     st.title('Sentiment Analysis of Smartphone Reviews')
 
-    st.markdown("""This dashboard consists in a a sentiment analysis project where we analyze reviews from a Smartphone. We built a crawler to scrap the reviews from Amazon's [website](https://www.amazon.com.br/Smartphone-Xiaomi-Redmi-Note-4RAM/dp/B07Y9XWK4M?ref_=Oct_d_omwf_d_16243890011&pd_rd_w=WpQXH&pf_rd_p=ea8c9e98-cbc0-4a8a-857e-90f7489e5fb1&pf_rd_r=Z6X2BCKWQDBV75NFSFQV&pd_rd_r=4190a482-4da3-4ad9-a21e-b36f66437680&pd_rd_wg=1bzDv&pd_rd_i=B07Y9XWK4M&th=1) and built a dataset with 4.770 reviews.""")
+    st.markdown("""This dashboard consists in a sentiment analysis project where we analyze reviews from a Smartphone. We built a crawler to scrap the reviews from Amazon's [website](https://www.amazon.com.br/Smartphone-Xiaomi-Redmi-Note-4RAM/dp/B07Y9XWK4M?ref_=Oct_d_omwf_d_16243890011&pd_rd_w=WpQXH&pf_rd_p=ea8c9e98-cbc0-4a8a-857e-90f7489e5fb1&pf_rd_r=Z6X2BCKWQDBV75NFSFQV&pd_rd_r=4190a482-4da3-4ad9-a21e-b36f66437680&pd_rd_wg=1bzDv&pd_rd_i=B07Y9XWK4M&th=1) and built a dataset with 4.770 reviews.""")
 
-    select = st.sidebar.selectbox('Visualization type', ['Line Chart','Pie Chart'], key=1)
+    select = st.sidebar.selectbox('Chart', ['Line','Pie'], key=1)
 
-    monthly_count = pd.read_csv('../data/monthly_count.csv')
+    if select == 'Line':
+        monthly_count = pd.read_csv('../data/monthly_count.csv')
 
-    line_plot = px.line(data_frame=monthly_count, 
+        line_plot = px.line(data_frame=monthly_count, 
                         x='new_date', 
                         y='monthly_perc', 
                         color='label',
@@ -44,11 +39,21 @@ if page == "Main":
                         labels={'new_date' : 'Month',
                                 'monthly_perc' : 'Percentage of Reviews (%)'},
                         color_discrete_sequence=['blue', 'green', 'red'])
-                        
-    st.markdown("## Monthly sentiment share")
-    st.plotly_chart(line_plot) 
-    st.markdown("""To plot this graph we considered 1 and 2 stars reviews as bad, 3 stars as 
-                    neutral and 4 and 5 stars as good.""")
+
+        st.markdown("## Monthly Sentiment Share")
+        st.plotly_chart(line_plot) 
+        st.markdown("""To plot this graph we considered 1 and 2 stars reviews as bad, 3 stars as 
+                        neutral and 4 and 5 stars as good.""")
+    elif select == 'Pie':
+        st.markdown('## Overall Sentiment')
+  
+        proportions = data.label.value_counts(normalize=True) * 100  
+        pie_plot = px.pie(values=proportions, names=['Good', 'Bad', 'Neutral'])
+
+        st.plotly_chart(pie_plot)
+
+    st.sidebar.markdown("[Project on GitHub](https://github.com/aianshay/reviews-sentiment-analysis)")
+
 
 
     st.markdown('## Reviews Summary')
@@ -56,7 +61,7 @@ if page == "Main":
                    The idea was to find key words that can summarize Good and Bad reviews, this 
                    way a manager does not need to read every single review to get a glimpse of what is being said about the product.""")
 
-    st.markdown("### Good Reviews")
+    st.markdown("### Positive Reviews")
     st.markdown(""" - celular 
                     - produto 
                     - aparelho 
@@ -72,7 +77,7 @@ if page == "Main":
                    often mentioned battery and camera as strong caracteristics of the product. """)
 
 
-    st.markdown('### Bad Reviews')
+    st.markdown('### Negative Reviews')
     st.markdown(""" - nota 
                     - fiscal
                     - produto
@@ -122,7 +127,7 @@ elif page == 'Word Clouds':
 elif page == "Models Results":    
     st.title("LSTM")
     df_lstm = pd.read_csv('../results/lstm.csv')
-    st.dataframe(df_lstm.iloc[:,1:]) 
+    st.dataframe(df_lstm.iloc[:,1:-1]) 
     
     count_pred = pd.read_csv('../data/pred_lstm_count.csv')
 
