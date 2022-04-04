@@ -4,5 +4,6 @@
  
  To run the project use:
  
- ``streamlit run dashboard/app.py``
+ ``cd dashboard``
+ ``streamlit run app.py``
 
